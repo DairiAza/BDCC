@@ -1,7 +1,7 @@
 extends PawnInteractionBase
 
 func _init():
-	id = "DMMMischief"
+	id = "DIFMischief"
 
 func start(_pawns:Dictionary, _args:Dictionary):
 	doInvolvePawn("starter", _pawns["starter"])
@@ -40,7 +40,7 @@ func stumble_interaction_text():
 
 func stumble_interaction_do(_id:String, _args:Dictionary, _context:Dictionary):
 	#GM.main.playAnimation(StageScene.SexVent, "tease", {pc=getRolePawn("reacter").charID, npc=getRolePawn("starter").charID})
-	runScene("DMMVentScene",[getRolePawn("starter").charID,getRolePawn("reacter").charID])
+	runScene("DIFVentScene",[getRolePawn("starter").charID,getRolePawn("reacter").charID])
 	#runScene("GenericSexScene", [getRolePawn("starter").charID, getRolePawn("reacter").charID], "subbysex")
 	#runScene("SocketHelp2Scene")
 
@@ -65,7 +65,7 @@ func retaliate_interaction_text():
 	addAction("yes", "Agree", "This happend", "default", 1.0, 60, {})
 
 func retaliate_interaction_do(_id:String, _args:Dictionary, _context:Dictionary):
-	runScene("DMMVentScene",[getRolePawn("reacter").charID,getRolePawn("starter").charID])
+	runScene("DIFVentScene",[getRolePawn("reacter").charID,getRolePawn("starter").charID])
 	GM.main.playAnimation(StageScene.SexVent, "tease", {pc=getRolePawn("reacter").charID, npc=getRolePawn("starter").charID})
 
 

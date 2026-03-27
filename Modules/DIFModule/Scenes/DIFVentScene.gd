@@ -14,7 +14,7 @@ func getCharName(character):
 		return "someone"
 
 func _init():
-	sceneID = "DMMVentScene"
+	sceneID = "DIFVentScene"
 
 func _initScene(_args = []):
 	if(_args.size() > 0):

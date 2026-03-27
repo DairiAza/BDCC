@@ -16,3 +16,7 @@ logs/
 *.blend1
 /.vscode/launch.json
 /.vscode/settings.json
+/Modules/FoxLib
+/Modules/FoxLibVerifier
+/FoxLib/CrotchBlocks
+/FoxLib
