@@ -1,5 +1,7 @@
 extends PawnInteractionBase
 
+var foxOptionsResource = null
+
 func _init():
 	id = "DIFInteract"
 
@@ -8,21 +10,23 @@ func shouldRunOnMeet(pawn1, pawn2, _pawn2Moved:bool):
 	if(!pawn1.canBeInterrupted() || !pawn2.canBeInterrupted()):
 		return [false]
 
-	if(!pawn1.isPlayer()):#interaction not for npc to npc and interaction procs from both sides - take only player approaches side
+	if(!pawn2.isPlayer()):#interaction not for npc to npc and interaction procs from both sides - take only npc approaches side
 		return[false]
 
-	if(!pawn2.canSocial()):
+	if(!pawn1.canSocial()):
 		return[false]
 
-	if(pawn2.isGuard() && initalizeInhibitor(pawn2)):
+	if(pawn1.isGuard() && initalizeInhibitor(pawn2)):
 		return[false]
 
-	return executeEvaluatedInteraction(pawn1,pawn2)
+	return executeEvaluatedInteraction(pawn2,pawn1)
 
 
 func getFoxLibValue(key,default):
 	if ResourceLoader.exists("res://FoxLib/FoxOption.gd"):
-		return FoxOption.FoxOptionsManager.getOption("DIF",key,default)
+		if(foxOptionsResource == null):
+			foxOptionsResource = ResourceLoader.load("res://FoxLib/FoxOption.gd")
+		return foxOptionsResource.FoxOptionsManager.getOption("DIF",key,default)		
 	else:
 		return default
 
@@ -50,10 +54,10 @@ func executeEvaluatedInteraction(player:CharacterPawn, partner:CharacterPawn):
 		var data = {"DIFTalking": 0.0,"GenericAttack": 0.0,"HelpingWithRestraints":0.0,"DIFFightScene":0}#"DIFMischief": 0.0}
 		#Talking---------------------------------------------------------------------------------------------
 		var talkingScore = 0;
-		talkingScore = clamp(partner.social*2,0,5)
+		talkingScore = clamp(partner.social*1,5,5)
 
 		if(specialRelationship && specialRelationship.id == "friend"):
-			talkingScore += 3
+			talkingScore += 2
 
 		talkingScore += affection/20	
 
@@ -93,6 +97,10 @@ func executeEvaluatedInteraction(player:CharacterPawn, partner:CharacterPawn):
 		soloScore += rand_range(-0.3,0.3)
 		diffScore += rand_range(-0.3,0.3)
 
+		if(specialRelationship && specialRelationship.id == "friend"):
+			attackScore = 0
+			diffScore = 0
+
 		data["GenericAttack"] = clamp(soloScore,0,5)
 		data["DIFFightScene"] = clamp(diffScore,0,5)
 		#----------------------------------------------------------------------------------------------------
@@ -119,11 +127,11 @@ func executeEvaluatedInteraction(player:CharacterPawn, partner:CharacterPawn):
 		data["HelpingWithRestraints"] = clamp(helpRestraintScore,0,5)
 		#----------------------------------------------------------------------------------------------------
 
-		#Evaluate Action
+		#Evaluate best Action
 		var bestAction = get_highest_pair(data)		
 
-		if ResourceLoader.exists("res://FoxLib/FoxOption.gd"):
-			bestAction.value *=  FoxOption.FoxOptionsManager.getOption("DIF","DIFInteractFrequency",1)
+		#Modify by FoxLib Settings
+		bestAction.value *=  getFoxLibValue("DIFInteractFrequency",1)
 
 		GM.main.IS.saynnExtra("Key: "+str(bestAction.key))
 		GM.main.IS.saynnExtra("Value:"+str(bestAction.value))
@@ -135,8 +143,8 @@ func executeEvaluatedInteraction(player:CharacterPawn, partner:CharacterPawn):
 				else:
 					startInteraction(bestAction.key, {starter=partner.charID, reacter=player.charID})
 					sendSocialEvent("starter", "reacter", SocialEventType.GotTalkedTo)
-				return [false];		
-		return [false];
+				return [false]		
+		return [false]
 
 func get_highest_pair(data: Dictionary) -> Dictionary:
 	var best_key = ""

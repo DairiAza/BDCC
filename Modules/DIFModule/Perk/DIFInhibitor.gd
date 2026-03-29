@@ -1,5 +1,7 @@
 extends PerkBase
 
+var foxOptionsResource = null
+
 func _init():
 	id = "DIFInhibitor"
 	#skillGroup = Skill.Start
@@ -12,7 +14,6 @@ func getVisibleDescription():
 
 func getMoreDescription():
 	return ""
-
 
 func toggleable() -> bool:
 	return false
@@ -62,6 +63,8 @@ func getBuffs():
 
 func getFoxLibValue(key,default):
 	if ResourceLoader.exists("res://FoxLib/FoxOption.gd"):
-		return FoxOption.FoxOptionsManager.getOption("DIF",key,default)
+		if(foxOptionsResource == null):
+			foxOptionsResource = ResourceLoader.load("res://FoxLib/FoxOption.gd")
+		return foxOptionsResource.FoxOptionsManager.getOption("DIF",key,default)		
 	else:
 		return default

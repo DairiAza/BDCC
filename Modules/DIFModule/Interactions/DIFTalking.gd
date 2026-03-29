@@ -24,13 +24,13 @@ func init_do(_id:String, _args:Dictionary, _context:Dictionary):
 
 	
 func DIF_init_text():
-	saynn("{starter.name} pauses a short distance from {reacter.you} unsure of how to start.")
+	saynn("{starter.name} pauses a short distance from {reacter.you} about to start whatever they have in mind.")
 	var roll = RNG.randi_range(1,7)
 	sayLine("starter", "DIFTalkingDIFInit" + str(roll), {starter="starter", reacter="reacter"})
-	saynn("{starter.He} gives {reacter.you} a small nod of acknowledgement keenly awaiting {reacter.your} response.")
+	saynn("{starter.He} gives {reacter.you} a determined look keenly awaiting {reacter.your} response.")
 	saynn("It seems like a simple conversation could start here... or maybe it's better to move along.")
 	
-	addAction("DIF_chat", "Chat", "Chat about something for a bit.", "talk", 1.0, 30, {})
+	addAction("DIF_chat", "Hear them out", "Listen to what they have in mind.", "talk", 1.0, 30, {})
 	addAction("DIF_leave", "Leave", "Maybe now isn't the best time.", "default", 1.0, 30, {})
 
 func DIF_init_do(_id:String, _args:Dictionary, _context:Dictionary):

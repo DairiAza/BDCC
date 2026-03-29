@@ -35,7 +35,7 @@ var statusEffectsList = [
 
 
 func _init():
-	id = "DIF"
+	id = "DairisInteractionFramework"
 	author = "DairiAza"
 
 func register():
@@ -61,7 +61,11 @@ func register():
 		GlobalRegistry.registerCharacter(character)
 
 	for statusEffect in statusEffectsList:
-		GlobalRegistry.registerStatusEffect(statusEffect)	
+		GlobalRegistry.registerStatusEffect(statusEffect)
+	
+	#debug load
+	#for id in GlobalRegistry.interactions.keys():
+	#	Log.print("Interaction registered: " + str(id))
 		
 
 func onFoxLibModInit(foxModuleAPI):
