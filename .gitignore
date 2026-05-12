@@ -14,6 +14,10 @@ logs/
 /.idea/
 /*.iml
 *.blend1
+
+# Substance painter files
+*.spp
+*.assbin
 /.vscode/launch.json
 /.vscode/settings.json
 /Modules/FoxLib
