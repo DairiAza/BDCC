@@ -20,6 +20,7 @@ var scenesList = [
 	#"res://Modules/DIFModule/Scenes/DIFVentScene.gd",
 	"res://Modules/DIFModule/Scenes/DIFInhibitorScene.gd",
 	"res://Modules/DIFModule/Scenes/DIFFightScene.gd",
+	#"res://Modules/DIFModule/Scenes/DIFTalkingScene.gd",
 ]
 
 var perksList = [

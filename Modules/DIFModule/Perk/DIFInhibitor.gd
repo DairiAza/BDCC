@@ -65,6 +65,6 @@ func getFoxLibValue(key,default):
 	if ResourceLoader.exists("res://FoxLib/FoxOption.gd"):
 		if(foxOptionsResource == null):
 			foxOptionsResource = ResourceLoader.load("res://FoxLib/FoxOption.gd")
-		return foxOptionsResource.FoxOptionsManager.getOption("DIF",key,default)		
+		return foxOptionsResource.FoxOptionsManager.getOption("DairisInteractionFramework",key,default)		
 	else:
 		return default

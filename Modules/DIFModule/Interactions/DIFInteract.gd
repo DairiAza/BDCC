@@ -10,23 +10,23 @@ func shouldRunOnMeet(pawn1, pawn2, _pawn2Moved:bool):
 	if(!pawn1.canBeInterrupted() || !pawn2.canBeInterrupted()):
 		return [false]
 
-	if(!pawn2.isPlayer()):#interaction not for npc to npc and interaction procs from both sides - take only npc approaches side
+	if(!pawn1.isPlayer()):#interaction not for npc to npc and interaction procs from both sides - take only player approaches side
 		return[false]
 
-	if(!pawn1.canSocial()):
+	if(!pawn2.canSocial()):
 		return[false]
 
-	if(pawn1.isGuard() && initalizeInhibitor(pawn2)):
+	if(pawn2.isGuard() && initalizeInhibitor(pawn2)):
 		return[false]
 
-	return executeEvaluatedInteraction(pawn2,pawn1)
+	return executeEvaluatedInteraction(pawn1,pawn2)
 
 
 func getFoxLibValue(key,default):
 	if ResourceLoader.exists("res://FoxLib/FoxOption.gd"):
 		if(foxOptionsResource == null):
 			foxOptionsResource = ResourceLoader.load("res://FoxLib/FoxOption.gd")
-		return foxOptionsResource.FoxOptionsManager.getOption("DIF",key,default)		
+		return foxOptionsResource.FoxOptionsManager.getOption("DairisInteractionFramework",key,default)		
 	else:
 		return default
 
@@ -54,9 +54,9 @@ func executeEvaluatedInteraction(player:CharacterPawn, partner:CharacterPawn):
 		var data = {"DIFTalking": 0.0,"GenericAttack": 0.0,"HelpingWithRestraints":0.0,"DIFFightScene":0}#"DIFMischief": 0.0}
 		#Talking---------------------------------------------------------------------------------------------
 		var talkingScore = 0;
-		talkingScore = clamp(partner.social*1,5,5)
+		talkingScore = clamp(partner.social*1.5,0,5)
 
-		if(specialRelationship && specialRelationship.id == "friend"):
+		if(specialRelationship && specialRelationship.id == "Friend"):
 			talkingScore += 2
 
 		talkingScore += affection/20	
@@ -78,7 +78,7 @@ func executeEvaluatedInteraction(player:CharacterPawn, partner:CharacterPawn):
 		if(affection<0):
 			attackScore -= affection/15
 
-		if(specialRelationship && specialRelationship.id == "nemesis"):
+		if(specialRelationship && specialRelationship.id == "Nemesis"):
 			attackScore += 1
 
 		if(partner.isHighSecInmate()):
@@ -97,8 +97,8 @@ func executeEvaluatedInteraction(player:CharacterPawn, partner:CharacterPawn):
 		soloScore += rand_range(-0.3,0.3)
 		diffScore += rand_range(-0.3,0.3)
 
-		if(specialRelationship && specialRelationship.id == "friend"):
-			attackScore = 0
+		if(specialRelationship && (specialRelationship.id == "Friend" || specialRelationship.id == "Owner")):
+			soloScore = 0
 			diffScore = 0
 
 		data["GenericAttack"] = clamp(soloScore,0,5)
@@ -115,7 +115,7 @@ func executeEvaluatedInteraction(player:CharacterPawn, partner:CharacterPawn):
 
 		helpRestraintScore -= meannessPlayer * 0.2
 		helpRestraintScore -= meanness * 0.1
-		if(specialRelationship && specialRelationship.id == "friend"):
+		if(specialRelationship && specialRelationship.id == "Friend"):
 			helpRestraintScore += 3
 
 		
@@ -132,8 +132,8 @@ func executeEvaluatedInteraction(player:CharacterPawn, partner:CharacterPawn):
 
 		#Modify by FoxLib Settings
 		bestAction.value *=  getFoxLibValue("DIFInteractFrequency",1)
-
-		GM.main.IS.saynnExtra("Key: "+str(bestAction.key))
+		
+		GM.main.IS.saynnExtra("Key: "+str(bestAction.key)+" - "+partner.getChar().getName())
 		GM.main.IS.saynnExtra("Value:"+str(bestAction.value))
 
 		if(bestAction.value>0):
